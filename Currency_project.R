@@ -7,11 +7,13 @@ library(RJSONIO)
 library(data.table)
 
 
-
+########################
 path <- "http://api.nbp.pl/api/exchangerates/tables/a/2012-01-01/2012-01-31/" 
 df  <- ldply(fromJSON(path), data.frame)
+######################## Przykład pobierania Danych z API
 
 
+##############################################
 names_by_table_a <- function() {
   path <- "https://api.nbp.pl/api/exchangerates/tables/a/" 
   names_a  <- ldply(fromJSON(path), data.frame)
@@ -35,10 +37,11 @@ names_by_table_b <- function() {
   
   return(names_b)
 }
+########################################### funkcję oddające nazwy walut nalezącychy do tablei A i B
+########################################### Return: tabela gdzie pierwsza kolumna to kody walut a druga to nazwy
 
 
-
-
+###########################################
 comaprision_data <- function(list_of_cur, startDate, endDate, names_a, names_b) {
   data <- c()
   startDate <- as.Date(startDate)
@@ -46,8 +49,11 @@ comaprision_data <- function(list_of_cur, startDate, endDate, names_a, names_b) 
   
   days <- as.integer(difftime(endDate,startDate))
   iter <- ceiling(days/365)
-  intervals <- c(seq(1,days,365),days)
+  intervals <- c(seq(0,days,365),days)
+  print(intervals)
   for(code in list_of_cur){
+    code_price <- c()
+    
     
     if(code %in% as.vector(names_a[,1]))
       path <- "http://api.nbp.pl/api/exchangerates/rates/a/code/startDate/endDate/"
@@ -57,24 +63,21 @@ comaprision_data <- function(list_of_cur, startDate, endDate, names_a, names_b) 
     path <- gsub("code",code,path)
     
     for(i in 1:iter){
-    path <- gsub("startDate",startDate+intervals[i],path)
-    path <- gsub("endDate",startDate[i+1],path)
-    print(startDate+intervals[i])
-    print(startDate[i+1])
-    
+    path_code <- gsub("startDate",startDate+intervals[i],path)
+    path_code <- gsub("endDate",startDate+intervals[i+1],path_code)
+    print(path_code)
+    print(difftime(startDate+intervals[i+1],startDate+intervals[i]-1))
+    price  <- ldply(fromJSON(path_code), data.frame)
+    price <- price[4,-c(1,2)]
+    n <- length(price)/3
+    print(n)
+    price <- price[c(1:n)*3]  
+    code_price <- c(code_price,price)
+
+
     }
   }
-   
+   return(code_price)
 }
 
-names_a <- names_by_table_a()
-names_b <- names_by_table_b()
-
-as.vector(names_a[,1])
-
-a <- names_a[,1]
-a <- as.Date("2012-01-01")
-b <- as.Date("2015-03-03")
-
-
-comaprision_data(c("THB"),"2012-01-01","2015-03-03",names_a,names_b)
+######################################### Nie skończona funkca zbierająca dane o wartośći walut do porównania
