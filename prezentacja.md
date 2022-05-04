@@ -8,16 +8,16 @@ output: html_document
 
 Projekt ma na celu pobranie, przetworzenie oraz zaprezentowanie danych dotyczącyh wartości walut na przełomie lat.
   
-Przedstawione za jego pomocą informacje mają na celu zilustrowanie wahania poszczegulnych kursów, rózniece w ich wartości w obecnym czasie jak i na przełomie lat oraz program ma wskazywać na nagłe skoki cen.
+Przedstawione za jego pomocą informacje mają na celu zilustrowanie wahania poszczególnych kursów, różnice w ich wartości w obecnym czasie jak i na przełomie lat oraz program ma wskazywać na nagłe skoki cen.
 
-Cały program napisany bedzie w jęezyku R a do stworzenia samej aplikacji okienkowej wykorzystany zostanie pakiet "shiny".
+Cały program napisany bedzie w języku R a do stworzenia samej aplikacji okienkowej wykorzystany zostanie pakiet "shiny".
 
 
 </br>
 
 # Opis danych
 
-Dane, które zostaną pobrane oraz uzyte pochodzic bedą ze strony Narodowego Banku Polskieg, który udostępnia API, służące do pobierania tak samo bieżącyh jak i archiwalnych informacji w formacie JSON lub XML. Na potrzeby naszego projektu wykorzystany bedzie format JSON.  
+Dane, które zostaną pobrane oraz uzyte pochodzic bedą ze strony Narodowego Banku Polskiego, który udostępnia API, służące do pobierania tak samo bieżącyh jak i archiwalnych informacji w formacie JSON lub XML. Na potrzeby naszego projektu wykorzystany bedzie format JSON.  
   
 Komunikacją z API odbywać się będzie za pomoca ścieżek do konkretnych danych:  
   
@@ -34,3 +34,11 @@ Wywołując takie zapytanie pomijając parametr {code} otrzymujemy plik mówiąc
 ![alt text](https://github.com/z4a33/Currency_proejct/blob/master/images/date_cur.png?raw=true)
 
 # Planowane funkcjonalności aplikacji
+
+1. Przedstawienie wykresu wahań danej waluty ze wzgledu na zakres czasu.
+2. Porównanie wartości kilku walut w obrębie danego czasu.
+3. Przeliczanie walut (kalkulator walut).
+4. Przedstawienie na wykresie słupkowym porównania aktualnych cen (wybranych walut).
+5. Sprawdzenie, czy waluta spada gwałtownie.
+
+Aplikacja zakłada również dowolność w zmienianiu zakresu czasu oraz w zmienianiu walut, którym chcemy się przyjrzeć.
