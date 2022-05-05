@@ -29,7 +29,9 @@ parametry:
 {startDate} - początek przedziału okresu, z któRego chcemy miec informajce.  
 {endDate} - koniec okresu.  
   
-Wywołując takie zapytanie pomijając parametr {code} otrzymujemy plik mówiący nam o wartości wszystkich danych z wybranej tabeli na przełomie zdefiniowanego okresu, gdzie kazdy record jest podpisany wartością, kodem, nazwą waluty oraz datą pomiaru:
+Wywołując takie zapytanie pomijając parametr {code} otrzymujemy plik mówiący nam o wartości wszystkich danych z wybranej tabeli na przełomie zdefiniowanego okresu, gdzie kazdy record jest podpisany wartością, kodem, nazwą waluty oraz datą pomiaru:  
+  
+http://api.nbp.pl/api/exchangerates/tables/a/2012-01-01/2012-01-31/  
 
 ![alt text](https://github.com/z4a33/Currency_proejct/blob/master/images/date_cur.png?raw=true)
 
