@@ -17,7 +17,7 @@ Cały program napisany bedzie w języku R a do stworzenia samej aplikacji okienk
 
 # Opis danych
 
-Dane, które zostaną pobrane oraz uzyte pochodzic bedą ze strony Narodowego Banku Polskiego, który udostępnia API, służące do pobierania tak samo bieżącyh jak i archiwalnych informacji w formacie JSON lub XML. Na potrzeby naszego projektu wykorzystany bedzie format JSON.  
+Dane, które zostaną pobrane oraz uzyte pochodzic bedą ze strony Narodowego Banku Polskiego, który udostępnia API, służące do pobierania tak samo bieżącyh jak i archiwalnych informacji w formacie JSON lub XML. 
   
 Komunikacją z API odbywać się będzie za pomoca ścieżek do konkretnych danych:  
   
