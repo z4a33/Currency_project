@@ -66,6 +66,10 @@ cur_rate <- function(cur, startDate, endDate, names_a, names_b) {
       unname(unlist(data[row,grepl("mid",names(data))])),
       unname(unlist(data[row,grepl("Date",names(data))])))
     colnames(data) <- c("rate","date")
+    
+    data <- data[,c(2,1)]
+    data <- cbind(data,rep(cur,nrow(data)))
+    colnames(data)[3] <- "sign"
     return(data)
     
   }
@@ -111,6 +115,7 @@ compar_cur <- function(cur, startDate, endDate) {
   for(c in cur){
     if(which(cur==c)[1]==1){
       data <- cur_rate(c, startDate, endDate, names_a, names_b)
+
       colnames(data) <- c("date","rate","sign")
     }
     else{
@@ -120,10 +125,26 @@ compar_cur <- function(cur, startDate, endDate) {
     }
   
   }
-  data$date = as.Date(data$date)
+  data$date = as.Date(data$date, origin = "1964-10-22")
   return(data)
 }
 
+
+move_of_cur <- function(cur) {
+  date <- Sys.Date()
+  day <-  wday(date,week_start = 6)
+  print(day)
+  if(day %in% c(1,2)) data <- compar_cur(cur, date-5, date)
+
+  else if (day == 3) data <- compar_cur(cur, date-5, date)
+  
+  else data <- compar_cur(cur, date-5, date)
+  
+  x <- data$date 
+  x <- max( x[x!=max(x)] )
+  
+  return(data[data$date >= x,])
+}
 
 ######################################### 
 
@@ -132,6 +153,16 @@ names_b <- names_by_table_b()
 
 all_names <- as.data.frame(mapply(c, names_a,names_b))
 
+wday(Sys.Date(),week_start = 6) %in% c(1,2)
 
+wday(Sys.Date()-1,week_start = 6)
 
+Sys.Date()-3
+
+a <- Sys.Date()
+
+move_of_cur(c("USD","EUR"))
+
+compar_cur(c("USD"),Sys.Date()-10,Sys.Date())
+  
 
