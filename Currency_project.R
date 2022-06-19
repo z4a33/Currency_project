@@ -42,47 +42,6 @@ names_by_table_b <- function() {
 ########################################### Return: tabela gdzie pierwsza kolumna to kody walut a druga to nazwy
 
 
-###########################################
-# comaprision_data <- function(cur, startDate, endDate, names_a, names_b) {
-#   
-#   if(cur %in% names_a[,1])
-#     path <- "http://api.nbp.pl/api/exchangerates/tables/a/startDate/endDate/"
-#   
-#   else if(cur %in% names_b[,1])
-#     path <- "http://api.nbp.pl/api/exchangerates/tables/b/startDate/endDate/"
-#   
-#   startDate <- as.Date(startDate)
-#   endDate <- as.Date(endDate)
-#   days <- as.integer(difftime(endDate,startDate))
-# 
-#   
-#   if(days < 90){
-#     path <- gsub("startDate",startDate+i,path)
-#     path <- gsub("endDate",endDate+i,path)
-#     data <- data.table(ldply(fromJSON(path), data.frame))
-#     return(data)
-#     
-#   }
-#   
-#   iter <- ceiling(days/91)
-#   intervals <- c(seq(0,days,91),days)
-# 
-#   for(i in 1:(length(intervals)-1)){
-# 
-#     path_c <- gsub("startDate",startDate+intervals[i],path)
-#     path_c <- gsub("endDate",startDate+intervals[i+1],path_c)
-#     print(path_c)
-#     if(i == 1){ data  <- data.table(ldply(fromJSON(path_c), data.frame))
-#     print(ncol(data))
-#     }
-#     else{ 
-#       x <- data.table(ldply(fromJSON(path_c), data.frame))
-#       print(ncol(x))
-#       data <- bind_rows(data,x)    
-#     }
-#     }
-#    return(data)
-# }
 
 cur_rate <- function(cur, startDate, endDate, names_a, names_b) {
   
@@ -173,7 +132,6 @@ names_b <- names_by_table_b()
 
 all_names <- as.data.frame(mapply(c, names_a,names_b))
 
-test <- compar_cur(c("EUR","BRL"), "2011-06-10", "2012-06-13")
 
 
-setdiff(c("1","2","3"),c("1","2","4"))
+

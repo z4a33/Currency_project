@@ -18,7 +18,7 @@ shinyUI(fluidPage(
         'compar_cur',
         'Porównaj wykresy walut',
         all_names[2],
-        selected = NULL,
+        selected = "EUR",
         multiple = TRUE,
         selectize = TRUE,
         width = NULL,
@@ -29,7 +29,7 @@ shinyUI(fluidPage(
       dateInput(
         'compar_start',
         "Start date",
-        value = NULL,
+        value = "2021-01-01",
         min = NULL,
         max = NULL,
         format = "yyyy-mm-dd",
