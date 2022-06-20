@@ -153,16 +153,5 @@ names_b <- names_by_table_b()
 
 all_names <- as.data.frame(mapply(c, names_a,names_b))
 
-wday(Sys.Date(),week_start = 6) %in% c(1,2)
 
-wday(Sys.Date()-1,week_start = 6)
-
-Sys.Date()-3
-
-a <- Sys.Date()
-
-move_of_cur(c("USD","EUR"))
-
-compar_cur(c("USD"),Sys.Date()-10,Sys.Date())
-  
 
