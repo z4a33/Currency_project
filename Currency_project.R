@@ -5,7 +5,8 @@ library(data.table)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
-
+library(tidyr)
+library(DT)
 
 ########################
 path <- "http://api.nbp.pl/api/exchangerates/tables/a/2012-01-01/2012-01-31/" 
@@ -130,23 +131,38 @@ compar_cur <- function(cur, startDate, endDate) {
 }
 
 
-move_of_cur <- function(cur) {
+  move_of_cur <- function(cur, names_a, names_b) {
   date <- Sys.Date()
-  day <-  wday(date,week_start = 6)
-  print(day)
-  if(day %in% c(1,2)) data <- compar_cur(cur, date-5, date)
+  a <- cur[cur %in% names_a[,1]]
+  b <- cur[cur %in% names_b[,1]]
 
-  else if (day == 3) data <- compar_cur(cur, date-5, date)
-  
-  else data <- compar_cur(cur, date-5, date)
-  
-  x <- data$date 
+  if(length(a) != 0){
+
+  data_a <- compar_cur(a, date-5, date)
+  x <- data_a$date 
   x <- max( x[x!=max(x)] )
+  data_a <- data_a[data_a$date >= x,]
+  data_a <- spread(data_a,key = date, value = rate)
+  data_a <- cbind(data_a, 0 < data_a[,3]-data_a[,2])
+  colnames(data_a)[4] <- "is_increasing"
+  }
   
-  return(data[data$date >= x,])
+  if(length(b) != 0){
+    data_b <- compar_cur(b, date-15, date)
+    x <- data_b$date 
+    x <- max( x[x!=max(x)] )
+    data_b <- data_b[data_b$date >= x,]
+    data_b <- spread(data_b,key = date, value = rate)
+    data_b <- cbind(data_b, 0 < data_b[,3]-data_b[,2])
+    colnames(data_b)[4] <- "is_increasing"
+  }
+  if(length(a) == 0) return(data_b[,c(1,4)])
+  if(length(b) == 0) return(data_a[,c(1,4)])
+
+  return(rbind(data_a,data_b,use.names= FALSE)[,c(1,4)])
 }
 
-######################################### 
+  ######################################### 
 
 names_a <- names_by_table_a()
 names_b <- names_by_table_b()
@@ -154,4 +170,7 @@ names_b <- names_by_table_b()
 all_names <- as.data.frame(mapply(c, names_a,names_b))
 
 
+move_of_cur(c("AFN","MGA","USD"),names_a,names_b)
 
+
+compar_cur(c("AFN","MGA"), Sys.Date()-15, Sys.Date())

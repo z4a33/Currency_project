@@ -57,7 +57,23 @@ shinyUI(fluidPage(
         datesdisabled = NULL,
         daysofweekdisabled = NULL
       )
-             )
+             ),
+    
+    tabPanel(
+      titlePanel("Czy rośnie"),
+      selectInput(
+        'is_increasing',
+        'czy rośnie',
+        all_names[2],
+        selected = "EUR",
+        multiple = TRUE,
+        selectize = TRUE,
+        width = NULL,
+        size = NULL),
+
+      dataTableOutput("table_of_move")
+      
+    )
     
     )
   ))

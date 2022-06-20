@@ -1,9 +1,7 @@
-library(shiny)
-
 
 shinyServer(function(input, output) {
 
-  output[["first_plot"]] =  {renderPlot({
+  output[["first_plot"]] =  renderPlot({
     print(input[['compar_cur']])
     
     signs <- all_names[all_names$A_names %in% input[['compar_cur']],1]
@@ -11,7 +9,9 @@ shinyServer(function(input, output) {
     print(signs)
     ggplot(data,aes(date,rate,col=sign)) +geom_line()
   })
+  
+  output[["table_of_move"]] = renderDT({
+    move_of_cur(input[['is_increasing']],names_a,names_b)
+  })
 
-
-
-}})
+})
