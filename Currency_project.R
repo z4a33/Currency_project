@@ -170,7 +170,8 @@ names_b <- names_by_table_b()
 all_names <- as.data.frame(mapply(c, names_a,names_b))
 
 
-move_of_cur(c("AFN","MGA","USD"),names_a,names_b)
+data.frame(move_of_cur(c("AFN","MGA","USD"),names_a,names_b))
 
+datatable(move_of_cur(c("AFN","MGA","USD"),names_a,names_b))
 
 compar_cur(c("AFN","MGA"), Sys.Date()-15, Sys.Date())
