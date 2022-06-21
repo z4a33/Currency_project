@@ -1,5 +1,5 @@
-install.packages("RJSONIO")
-install.packages("data.table")
+#install.packages("RJSONIO")
+#install.packages("data.table")
 
 
 library(plyr)
@@ -81,3 +81,29 @@ comaprision_data <- function(list_of_cur, startDate, endDate, names_a, names_b) 
 }
 
 ######################################### Nie skończona funkca zbierająca dane o wartośći walut do porównania
+
+
+
+
+# konwerter walut
+value_in_pln <- function(symb, date="") {
+  names_a = names_by_table_a()
+  names_b = names_by_table_b()
+  if(symb %in% as.vector(names_a[,1]))
+    path <- "http://api.nbp.pl/api/exchangerates/rates/a/code/date"
+  else if(symb %in% names_b[,1])
+    path <- "http://api.nbp.pl/api/exchangerates/rates/b/code/date"
+  path <- gsub("code", symb, path)
+  path <- gsub("date", date, path)
+  result <- ldply(fromJSON(path), data.frame)[4,5]
+  return(result)
+}
+
+
+converter <- function(nr_units, symb1, symb2, date="") {
+  if (symb1 == "PLN") 
+    if (symb2 == "PLN") return(nr_units)
+    else return(nr_units/value_in_pln(symb2, date))
+  else if (symb2 == "PLN") return(nr_units*value_in_pln(symb1, date))
+  else return(nr_units*value_in_pln(symb1, data)/value_in_pln(symb2, data))
+}
