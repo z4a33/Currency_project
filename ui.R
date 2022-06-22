@@ -1,12 +1,4 @@
 
-library(shiny)
-
-library(plyr)
-library(RJSONIO)
-library(data.table)
-library(dplyr)
-library(lubridate)
-library(ggplot2)
 
 shinyUI(fluidPage(
 
@@ -14,6 +6,7 @@ shinyUI(fluidPage(
               
     tabPanel(
       titlePanel("Porównaj wykresy walut"),
+      actionButton("go1", "Go"),
       selectInput(
         'compar_cur',
         'Porównaj wykresy walut',
@@ -61,6 +54,7 @@ shinyUI(fluidPage(
     
     tabPanel(
       titlePanel("Czy rośnie"),
+      actionButton("go2", "Go"),
       selectInput(
         'is_increasing',
         'czy rośnie',
