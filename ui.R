@@ -70,8 +70,5 @@ shinyUI(fluidPage(
       
     )
 
-  tabsetPanel(
 
-    
-    )
-  ))
+  )))
