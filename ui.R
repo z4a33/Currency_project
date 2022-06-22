@@ -45,9 +45,11 @@ shinyUI(fluidPage(
           daysofweekdisabled = NULL
         ),
         actionButton("count_button", "Przelicz!"),
-        dataTableOutput("table_converter") 
-      )
+      ),
+      mainPanel(
+          h1("Odpowiedz"),
+          verbatimTextOutput("txtout")
     )
     
   )
-))
+)))
