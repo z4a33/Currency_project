@@ -23,12 +23,5 @@ actual_prices <- function(waluty) {
   
   dane <- data.frame("waluta" = as.character(c(waluta)),
                      "wartosc" = as.double(c(wartosc))) 
-  
-  ggplot(dane, mapping = aes(x = waluta, y = wartosc)) +
-    geom_bar(fill = "gold",stat = "identity") +
-    theme(legend.position = "none") + 
-    geom_text(aes(label= wartosc), vjust=-0.3, size=5)
-  
 }
-actual_prices(c("THB","AUD","HKD","USD","CAD","NZD"))
-## test
+  
