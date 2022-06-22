@@ -23,5 +23,23 @@ shinyServer(function(input, output) {
                                                                       c('green', 'red'))))
 
   })
+  
+  dane = eventReactive(input$click, {
+    wal = c(gsub(pattern = "\t", replacement = "", input$waluty))
+    actual_prices(wal)
+  })
+  output$wykres = renderPlot({ggplot(dane(), mapping = aes(x = waluta, y = wartosc)) +
+      geom_bar(fill = "gold",stat = "identity") +
+      theme(legend.position = "none") + 
+      geom_text(aes(label= wartosc), vjust=-0.3, size=5)})
+  
+  output$txtout <- renderText({
+    symb1 <- all_names[all_names$A_names %in% input$symb1,1]
+    symb2 <- all_names[all_names$A_names %in% input$symb2,1]
+    result <- converter(input$nr_units, symb1, symb2, "")
+    paste(input$nr_units, symb1, paste("(", input$symb1, ")", sep = ""), 
+          "to w przeliczeniu", result, symb2, paste("(", input$symb2, ")", sep = ""), 
+          sep = " " )
+  })
 
 })
