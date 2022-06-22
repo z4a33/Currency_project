@@ -2,7 +2,6 @@ library(shiny)
 
 
 shinyServer(function(input, output) {
-  
   dane = eventReactive(input$click, {
     wal = c(gsub(pattern = "\t", replacement = "", input$waluty))
     actual_prices(wal)

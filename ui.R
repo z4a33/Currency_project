@@ -6,6 +6,7 @@ shinyUI(fluidPage(
   tabsetPanel(
     tabPanel(
     titlePanel("Aktualne ceny w PLN"),
+        h4(paste("Dzisiaj jest", as.character(Sys.Date()), sep = " ")),
         checkboxGroupInput(inputId = "waluty",
                            label = "Wybierz waluty",
                            inline = TRUE,
