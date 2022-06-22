@@ -62,7 +62,7 @@ value_in_pln <- function(symb, date="") {
 converter <- function(nr_units, symb1, symb2, date) {
   nr_units = as.double(nr_units)
   result <- nr_units*value_in_pln(symb1, date)/value_in_pln(symb2, date)
-  return(round(result, 2)))
+  return(round(result, 2))
 }
 
 
