@@ -2,6 +2,7 @@
 
 shinyUI(fluidPage(
 
+
   tabsetPanel(
               
     tabPanel(
@@ -68,6 +69,9 @@ shinyUI(fluidPage(
       dataTableOutput("table_of_move")
       
     )
+
+  tabsetPanel(
+
     
     )
   ))
