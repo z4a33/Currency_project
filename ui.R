@@ -44,10 +44,9 @@ shinyUI(fluidPage(
           datesdisabled = NULL,
           daysofweekdisabled = NULL
         ),
-        actionButton("count_button", "Przelicz!"),
       ),
       mainPanel(
-          h1("Odpowiedz"),
+          h1("Wynik"),
           verbatimTextOutput("txtout")
     )
     

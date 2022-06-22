@@ -60,27 +60,9 @@ value_in_pln <- function(symb, date="") {
 
 
 converter <- function(nr_units, symb1, symb2, date) {
-  result = 0
-  if (symb1 == "PLN") {
-    if (symb2 == "PLN") {
-      result = nr_units
-      #print(result) 
-    } else {
-      result = nr_units/value_in_pln(symb2, date)
-      #print(result)
-    }
-  } else if (symb2 == "PLN") {
-    result = nr_units*value_in_pln(symb1, date)
-  } else result = nr_units*value_in_pln(symb1, data)/value_in_pln(symb2, data)
-  return(result)
+  nr_units = as.double(nr_units)
+  result <- nr_units*value_in_pln(symb1, date)/value_in_pln(symb2, date)
+  return(round(result, 2)))
 }
 
 
-converter1 <- function(nr_units, symb1, symb2, date) {
-  result = nr_units*value_in_pln(symb1, data)/value_in_pln(symb2, data)
-  return(result)
-}
-
-typeof(value_in_pln("EUR"))
-
-converter1(100, "USD", "USD", "2022-06-22")
