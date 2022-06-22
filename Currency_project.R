@@ -75,6 +75,12 @@ converter <- function(nr_units, symb1, symb2, date) {
   return(result)
 }
 
+
+converter1 <- function(nr_units, symb1, symb2, date) {
+  result = nr_units*value_in_pln(symb1, data)/value_in_pln(symb2, data)
+  return(result)
+}
+
 typeof(value_in_pln("EUR"))
 
-converter(100, "EUR", "PLN", "2022-06-22")
+converter1(100, "USD", "USD", "2022-06-22")
