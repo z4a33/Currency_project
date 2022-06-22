@@ -1,38 +1,40 @@
-#install.packages("RJSONIO")
-#install.packages("data.table")
-
-
+library(tidyverse)
 library(plyr)
 library(RJSONIO)
 library(data.table)
-
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(tidyr)
+library(DT)
 
 ########################
 path <- "http://api.nbp.pl/api/exchangerates/tables/a/2012-01-01/2012-01-31/" 
-df  <- ldply(fromJSON(path), data.frame)
+df  <- data.table(ldply(fromJSON(path), data.frame))
 ######################## Przykład pobierania Danych z API
 
 
 ##############################################
+
 names_by_table_a <- function() {
   path <- "https://api.nbp.pl/api/exchangerates/tables/a/" 
-  names_a  <- ldply(fromJSON(path), data.frame)
-  names_a <- names_a[1,-c(1,2,3)]
+  names_a  <- data.frame(unlist(ldply(fromJSON(path), data.frame)))
+  names_a <- names_a[-c(1,2,3),]
   n_a <- length(names_a)/3
-  names_a <- rbindlist(list(names_a[1,(c(1:n_a)*3-1)],names_a[1,(c(1:n_a)*3-2)]),use.names = FALSE)
-  names_a <- t(names_a)
-  colnames(names_a) <- c("A_sign","B_names")
+  names_a <- data.frame("Code"=names_a[(c(1:n_a)*3-1)],"Name"=names_a[(c(1:n_a)*3-2)],use.names = FALSE)
+  names_a <- names_a[,c(1,2)]
+  colnames(names_a) <- c("A_sign","A_names")
   
   return(names_a)
 }
 
 names_by_table_b <- function() {
   path <- "https://api.nbp.pl/api/exchangerates/tables/b/"
-  names_b  <- ldply(fromJSON(path), data.frame)
-  names_b <- names_b[1,-c(1,2,3)]
+  names_b  <- data.frame(unlist(ldply(fromJSON(path), data.frame)))
+  names_b <- names_b[-c(1,2,3),]
   n_b <- length(names_b)/3
-  names_b <- rbindlist(list(names_b[1,(c(1:n_b)*3-1)],names_b[1,(c(1:n_b)*3-2)]),use.names = FALSE)
-  names_b <- t(names_b)
+  names_b <- data.frame("Code"=names_b[(c(1:n_b)*3-1)],"Name"=names_b[(c(1:n_b)*3-2)],use.names = FALSE)
+  names_b <- names_b[,c(1,2)]
   colnames(names_b) <- c("B_sign","B_names")
   
   return(names_b)
@@ -41,49 +43,131 @@ names_by_table_b <- function() {
 ########################################### Return: tabela gdzie pierwsza kolumna to kody walut a druga to nazwy
 
 
-###########################################
-comaprision_data <- function(list_of_cur, startDate, endDate, names_a, names_b) {
-  data <- c()
+
+cur_rate <- function(cur, startDate, endDate, names_a, names_b) {
+  
+  if(cur %in% names_a[,1])
+    path <- "http://api.nbp.pl/api/exchangerates/rates/a/code/startDate/endDate/"
+  
+  else if(cur %in% names_b[,1])
+    path <- "http://api.nbp.pl/api/exchangerates/rates/b/code/startDate/endDate/"
+  
   startDate <- as.Date(startDate)
   endDate <- as.Date(endDate)
-  
   days <- as.integer(difftime(endDate,startDate))
-  iter <- ceiling(days/365)
-  intervals <- c(seq(0,days,365),days)
-  print(intervals)
-  for(code in list_of_cur){
-    code_price <- c()
+  
+  
+  if(days < 90){
+    path <- gsub("startDate",startDate,path)
+    path <- gsub("endDate",endDate,path)
+    path <- gsub("code",cur,path)
+    data <- ldply(fromJSON(path), data.frame)
+    row <- which(data == "rates")
+    data <- data.table(
+      unname(unlist(data[row,grepl("mid",names(data))])),
+      unname(unlist(data[row,grepl("Date",names(data))])))
+    colnames(data) <- c("rate","date")
     
+    data <- data[,c(2,1)]
+    data <- cbind(data,rep(cur,nrow(data)))
+    colnames(data)[3] <- "sign"
+    return(data)
     
-    if(code %in% as.vector(names_a[,1]))
-      path <- "http://api.nbp.pl/api/exchangerates/rates/a/code/startDate/endDate/"
-    else if(code %in% names_b[,1])
-      path <- "http://api.nbp.pl/api/exchangerates/rates/b/code/startDate/endDate/"
-    
-    path <- gsub("code",code,path)
-    
-    for(i in 1:iter){
-    path_code <- gsub("startDate",startDate+intervals[i],path)
-    path_code <- gsub("endDate",startDate+intervals[i+1],path_code)
-    print(path_code)
-    print(difftime(startDate+intervals[i+1],startDate+intervals[i]-1))
-    price  <- ldply(fromJSON(path_code), data.frame)
-    price <- price[4,-c(1,2)]
-    n <- length(price)/3
-    print(n)
-    price <- price[c(1:n)*3]  
-    code_price <- c(code_price,price)
-
-
-    }
   }
-   return(code_price)
+  
+  iter <- ceiling(days/91)
+  intervals <- c(seq(0,days,91),days)
+  
+  for(i in 1:(length(intervals)-1)){
+    
+    path_c <- gsub("startDate",startDate+intervals[i],path)
+    path_c <- gsub("endDate",startDate+intervals[i+1],path_c)
+    path_c <- gsub("code",cur,path_c)
+    print(path_c)
+    if(i == 1){ 
+      
+      data  <- ldply(fromJSON(path_c), data.frame)
+      row <- which(data=='rates')
+      data <- data.table(
+        unname(unlist(data[row,grepl("mid",names(data))])),
+        unname(unlist(data[row,grepl("Date",names(data))])))
+      colnames(data) <- c("rate","date")
+    }
+    else{ 
+      x <- ldply(fromJSON(path_c), data.frame)
+      row <- which(x=='rates')
+      x <- data.table(
+        unname(unlist(x[row,grepl("mid",names(x))])),
+        unname(unlist(x[row,grepl("Date",names(x))])))
+      
+      data <- rbind(data,x,use.names=FALSE)    
+    }
+    
+  }
+  colnames(data) <- c("rate","date")
+  data <- unique(data[,c(2,1)])
+  data <- cbind(data,rep(cur,nrow(data)))
+  colnames(data)[3] <- "sign"
+  return(data)
 }
 
-######################################### Nie skończona funkca zbierająca dane o wartośći walut do porównania
+compar_cur <- function(cur, startDate, endDate) {
+  
+  for(c in cur){
+    if(which(cur==c)[1]==1){
+      data <- cur_rate(c, startDate, endDate, names_a, names_b)
+      
+      colnames(data) <- c("date","rate","sign")
+    }
+    else{
+      new <- cur_rate(c, startDate, endDate, names_a, names_b)
+      colnames(new) <- c("date","rate","sign")
+      data <- rbind(data,new)
+    }
+    
+  }
+  data$date = as.Date(data$date, origin = "1964-10-22")
+  return(data)
+}
 
 
+move_of_cur <- function(cur, names_a, names_b) {
+  date <- Sys.Date()
+  a <- cur[cur %in% names_a[,1]]
+  b <- cur[cur %in% names_b[,1]]
+  
+  if(length(a) != 0){
+    
+    data_a <- compar_cur(a, date-5, date)
+    x <- data_a$date 
+    x <- max( x[x!=max(x)] )
+    data_a <- data_a[data_a$date >= x,]
+    data_a <- spread(data_a,key = date, value = rate)
+    data_a <- cbind(data_a, 0 < data_a[,3]-data_a[,2])
+    colnames(data_a)[4] <- "is_increasing"
+  }
+  
+  if(length(b) != 0){
+    data_b <- compar_cur(b, date-15, date)
+    x <- data_b$date 
+    x <- max( x[x!=max(x)] )
+    data_b <- data_b[data_b$date >= x,]
+    data_b <- spread(data_b,key = date, value = rate)
+    data_b <- cbind(data_b, 0 < data_b[,3]-data_b[,2])
+    colnames(data_b)[4] <- "is_increasing"
+  }
+  if(length(a) == 0) return(data_b[,c(1,4)])
+  if(length(b) == 0) return(data_a[,c(1,4)])
+  
+  return(rbind(data_a,data_b,use.names= FALSE)[,c(1,4)])
+}
 
+######################################### 
+
+names_a <- names_by_table_a()
+names_b <- names_by_table_b()
+
+all_names <- as.data.frame(mapply(c, names_a,names_b))
 
 # konwerter walut
 value_in_pln <- function(symb, date="") {
@@ -101,6 +185,7 @@ value_in_pln <- function(symb, date="") {
 
 
 converter <- function(nr_units, symb1, symb2, date="") {
+  nr_units = as.numeric(nr_units)
   if (symb1 == "PLN") 
     if (symb2 == "PLN") return(nr_units)
     else return(nr_units/value_in_pln(symb2, date))

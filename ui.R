@@ -67,6 +67,52 @@ shinyUI(fluidPage(
     
     tabPanel(
       titlePanel("Konwerter walutowy"),
+      sidebarPanel(
+        
+        tags$h3("Do obliczeń będziemy potrzebować liczby jednostek, 
+                walutę początkową, walutę docelową i datę:"),
+        textInput("nr_units", "Podaj liczbę jednostek: ", 1),
+        
+        tags$h5("Podaj początkową walutę: "),
+        
+        selectInput(
+          'converter',
+          "symb1",
+          all_names[2],
+          selected = "EUR",
+          multiple = FALSE,
+          selectize = TRUE,
+          width = NULL,
+          size = NULL),
+        tags$h5("Podaj docelową walutę: "),
+        
+        selectInput(
+          'converter',
+          "symb2",
+          all_names[2],
+          selected = "EUR",
+          multiple = FALSE,
+          selectize = TRUE,
+          width = NULL,
+          size = NULL),
+        
+        dateInput(
+          'converter',
+          "symb2",
+          value = NULL,
+          min = NULL,
+          max = NULL,
+          format = "yyyy-mm-dd",
+          startview = "month",
+          weekstart = 0,
+          language = "en",
+          width = NULL,
+          autoclose = TRUE,
+          datesdisabled = NULL,
+          daysofweekdisabled = NULL
+        ),
+        dataTableOutput("table_converter") 
+      )
     )
     
   )
