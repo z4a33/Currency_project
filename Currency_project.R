@@ -8,13 +8,7 @@ library(ggplot2)
 library(tidyr)
 library(DT)
 
-########################
-path <- "http://api.nbp.pl/api/exchangerates/tables/a/2012-01-01/2012-01-31/" 
-df  <- data.table(ldply(fromJSON(path), data.frame))
-######################## Przykład pobierania Danych z API
 
-
-##############################################
 
 names_by_table_a <- function() {
   path <- "https://api.nbp.pl/api/exchangerates/tables/a/" 
