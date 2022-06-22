@@ -195,8 +195,6 @@ converter <- function(nr_units, symb1, symb2, date) {
   result <- nr_units*value_in_pln(symb1, date)/value_in_pln(symb2, date)
   return(round(result, 2))
 }
-
-
 ######################################### 
 
 names_a <- names_by_table_a()
