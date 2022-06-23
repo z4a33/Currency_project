@@ -7,7 +7,7 @@ shinyUI(fluidPage(
               
     tabPanel(
       titlePanel("Porównaj wykresy walut"),
-      actionButton("go1", "Go"),
+      actionButton("go1", "Wykonaj"),
       selectInput(
         'compar_cur',
         'Porównaj wykresy walut',
@@ -55,7 +55,7 @@ shinyUI(fluidPage(
     
     tabPanel(
       titlePanel("Czy rośnie"),
-      actionButton("go2", "Go"),
+      actionButton("go2", "Wykonaj"),
       selectInput(
         'is_increasing',
         'czy rośnie',
